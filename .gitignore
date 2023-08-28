@@ -101,3 +101,11 @@ ENV/
 .mypy_cache/
 
 .DS_Store
+
+# additional files to ignore
+examples/in_swapper/inswapper_128.onnx
+myenv/
+examples/in_swapper/t1_swapped.jpg
+examples/in_swapper/t1_swapped2.jpg
+models/
+
