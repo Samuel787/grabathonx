@@ -6,7 +6,8 @@ import glob
 import cv2
 import insightface
 from insightface.app import FaceAnalysis
-from insightface.data import get_image as ins_get_image
+# from insightface.data import get_image as ins_get_image
+from examples.in_swapper.imagecustom import get_image as ins_get_image
 import sys
 from PIL import Image
 
