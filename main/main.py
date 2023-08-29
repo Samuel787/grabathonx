@@ -16,7 +16,7 @@ origins = ["*"]  # You can restrict origins for security purposes
 app.add_middleware(CORSMiddleware, allow_origins=origins, allow_methods=["*"], allow_headers=["*"])
 
 # Temporary directory to store uploaded files
-UPLOAD_DIR = "myenv/lib/python3.9/site-packages/insightface/data/images"
+UPLOAD_DIR = "upload" # "myenv/lib/python3.9/site-packages/insightface/data/images"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @app.get("/")
