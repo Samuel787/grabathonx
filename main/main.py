@@ -1,15 +1,12 @@
 from fastapi import FastAPI, File, UploadFile
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 import shutil
 import os
-from imageprocessing.image_processing import (
-    process_image,
-    merge_input_images,
-)
 from examples.in_swapper.inswapper_main import (
-    insight_one_into_two_test,
-    cut_out_second_image_test
+    merge_input_images,
+    insight_one_into_two,
+    cut_out_second_image
 )
 
 app = FastAPI()
@@ -41,12 +38,12 @@ async def insight(file1: UploadFile = File(...), file2: UploadFile = File(...)):
             shutil.copyfileobj(file2.file, f2)
 
         # You can now process the images or perform any other required operations
-        process_image()
+        print("processing image")
 
         merge_input_images(file1_path, file2_path, merged_file_path)
-        insight_one_into_two_test(merged_file_path, swapped_file_path)
-        cut_out_second_image_test(file1_path, file2_path, swapped_file_path, final_file_path)
-        return JSONResponse(content={"message": "Images uploaded successfully"}, status_code=200)
-
+        insight_one_into_two("mergedimage", swapped_file_path)
+        cut_out_second_image(file1_path, file2_path, swapped_file_path, final_file_path)
+        
+        return FileResponse(final_file_path, headers={"Content-Disposition": "attachment; filename=result.jpg"})
     except Exception as e:
         return JSONResponse(content={"message": str(e)}, status_code=500)
