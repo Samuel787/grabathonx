@@ -7,6 +7,7 @@ import time
 
 UPSCALE_START_URL = "https://next-fast-midjourney.vercel.app/api/upscale/start"
 UPSCALE_CHECK_URL = "https://next-fast-midjourney.vercel.app/api/upscale/check"
+SEND_URL = "https://next-fast-midjourney.vercel.app/api/webhook/send"
 
 def upscale_start():
     try:
@@ -20,11 +21,18 @@ def upscale_check():
     except Exception as e:
         print(f"An exception ocurred: {str(e)}")
 
+def send_url():
+    try:
+        response = requests.get(SEND_URL)
+    except Exception as e:
+        print(f"An exception ocurred: {str(e)}")
+
 def cron_job():
     while True:
         print("New cron job cycle starting")
         upscale_start()
         upscale_check()
+        send_url()
         print("cron job work is done and going to sleep for 60 seconds")
         time.sleep(60)
 

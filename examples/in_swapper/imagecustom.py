@@ -7,9 +7,9 @@ class ImageCache:
     data = {}
 
 def get_image(name, to_rgb=False):
-    key = (name, to_rgb)
-    if key in ImageCache.data:
-        return ImageCache.data[key]
+    # key = (name, to_rgb)
+    # if key in ImageCache.data:
+    #     return ImageCache.data[key]
     images_dir = osp.join(os.getcwd(), "upload")
     ext_names = ['.jpg', '.png', '.jpeg']
     image_file = None
@@ -22,5 +22,5 @@ def get_image(name, to_rgb=False):
     img = cv2.imread(image_file)
     if to_rgb:
         img = img[:,:,::-1]
-    ImageCache.data[key] = img
+    # ImageCache.data[key] = img
     return img
