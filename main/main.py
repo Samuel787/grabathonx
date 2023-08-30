@@ -89,6 +89,45 @@ async def insight_images(payload: dict):
     except Exception as e:
         return JSONResponse(content={"message": str(e)}, status_code=500)
 
+def send_message_to_slack_bot(message, slack_webhook_url):
+    custom_headers = {
+        "Content-Type": "application/json",
+    }
+    data = {
+       "text": message,
+       "response_type": "in_channel"
+    }
+    try:
+        response = requests.post(slack_webhook_url, headers=custome_headers, json=data)
+    except Exception as e:
+        print(f"Something went wrong when sending message back to slack bot: {str(e)}")
+
+def send_message_to_slack_bot(message, slack_webhook_url):
+    custom_headers = {
+        "Content-Type": "application/json",
+    }
+    data = {
+       "text": message,
+       "response_type": "in_channel"
+    }
+    try:
+        response = requests.post(slack_webhook_url, headers=custome_headers, json=data)
+    except Exception as e:
+        print(f"Something went wrong when sending message back to slack bot: {str(e)}")
+
+async def call_giorgy_endpoint(giorgy_endpoint, data, slack_webhook_url):
+    custom_headers = {
+        "Content-Type": "application/json",
+    }
+    try:
+        response = requests.post(giorgy_endpoint, headers=custom_headers, json=data)
+        if response.status_code != 200:
+            send_message_to_slack_bot("Something went wrong :( Please try again!", slack_webhook_url)
+        else:
+            send_message_to_slack_bot("Give me a few minutes to cook up something for you...", slack_webhook_url)
+    except Exception as e:
+        send_message_to_slack_bot("Something went wrong :( Please try again!", slack_webhook_url)
+
 @app.post("/slack")
 async def get_text_from_slack_payload(request: Request):
     request_body = await request.body()
@@ -102,6 +141,10 @@ async def get_text_from_slack_payload(request: Request):
         reference_url = tokens[-1]
     webhook_url = parsed_data.get("response_url", [""][0])[0]
 
+    if reference_url != None:
+        text_value = text_value.replace(reference_url, "")
+        text_value = text_value.strip()
+
     data = {
         "prompt": text_value,
         "webhookUrl": webhook_url
@@ -114,8 +157,8 @@ async def get_text_from_slack_payload(request: Request):
         "Content-Type": "application/json",
     }
 
-    print(f"This is the payload to Giorgy's api: {data}")
-
+    print(f"This is the paylo ad to Giorgy's api: {data}")
+    
     try:
         response = requests.post(GIORGY_API_ENDPOINT, headers=custom_headers, json=data)
 
